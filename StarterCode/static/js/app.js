@@ -10,8 +10,9 @@ tableHtml.attr();
 filterButton.on("click", function() {
   var filterDate = d3.select("#datetime").property("value");
   var filterCountry = d3.select("#menu-country").node().value;
-  var filterState = d3.select("#menu-state").node().value;
-  var filterCity = d3.select("#menu-city").node().value;
+  var filterState = d3.select("#menu-state").node();
+  var filterCity = d3.select("#menu-city").node();
+  var filterShape = d3.select("#menu-shape").node();
   //console.log(filterDate);
   //filter
   var valueFilter = tableData.filter(value => value.datetime == filterDate);
@@ -19,15 +20,20 @@ filterButton.on("click", function() {
     valueFilter = valueFilter.filter(value => value.country == filterCountry);
   }
 
-  if (filterState != "") {
-    valueFilter = valueFilter.filter(value => value.state == filterState);
+  if (filterState != null) {
+    valueFilter = valueFilter.filter(value => value.state == filterState.value);
   }
 
-  if (filterCity != "") {
-    valueFilter = valueFilter.filter(value => value.city == filterCity);
+  if (filterCity != null) {
+    valueFilter = valueFilter.filter(value => value.city == filterCity.value);
+  }
+
+  if (filterShape != null) {
+    valueFilter = valueFilter.filter(value => value.shape == filterShape.value);
   }
   //clean the html before including more table line
   tableHtml.html("");
+  d3.select("#result").html("");
   console.log(valueFilter);
   if (valueFilter == "") {
     d3.select("#result").text("Result not found");
@@ -61,7 +67,7 @@ textCountryMenu.append("p").text("Country: ");
 var menuValueCountry = d3
   .select("#filters")
   .append("select")
-  .attr("id", "menu-country"); //including a id
+  .attr("id", "menu-country"); //including an id
 
 Object.keys(countryDc).forEach(value => {
   menuValueCountry
@@ -74,7 +80,7 @@ Object.keys(countryDc).forEach(value => {
 // end
 
 //based on the data select by previous drop-menu from country, it creates a state menu
-d3.select("select").on("click", function(d) {
+d3.select("select").on("click", function() {
   var stateDc = {};
   clearAll();
   var selected = d3.select("#menu-country").node().value;
@@ -94,7 +100,7 @@ d3.select("select").on("click", function(d) {
     var menuValueState = d3
       .select("#state")
       .append("select")
-      .attr("id", "menu-state"); //including a id
+      .attr("id", "menu-state"); //including an id
 
     console.log(stateDc);
     Object.keys(stateDc).forEach(value => {
@@ -110,7 +116,7 @@ d3.select("select").on("click", function(d) {
 // end
 
 //based on the data select by previous drop-menu from state, it creates a city menu
-d3.select("#state").on("click", function(d) {
+d3.select("#state").on("click", function() {
   var stateDc = {};
   d3.select("#shape").html("");
   var selected = d3.select("#menu-state").node().value;
@@ -129,7 +135,7 @@ d3.select("#state").on("click", function(d) {
   var menuValueCity = d3
     .select("#city")
     .append("select")
-    .attr("id", "menu-city"); //including a id
+    .attr("id", "menu-city"); //including an id
 
   console.log(stateDc);
   Object.keys(stateDc).forEach(value => {
@@ -144,7 +150,7 @@ d3.select("#state").on("click", function(d) {
 // end
 
 //based on the data select by previous drop-menu from city, it creates a shape menu
-d3.select("#city").on("click", function(d) {
+d3.select("#city").on("click", function() {
   var stateDc = {};
   var selected = d3.select("#menu-city").node().value;
   //find state base on country
@@ -162,7 +168,7 @@ d3.select("#city").on("click", function(d) {
   var menuValueShape = d3
     .select("#shape")
     .append("select")
-    .attr("id", "menu-shape"); //including a id
+    .attr("id", "menu-shape"); //including an id
 
   console.log(stateDc);
   Object.keys(stateDc).forEach(value => {
