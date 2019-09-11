@@ -26,3 +26,33 @@ filterButton.on("click", function() {
     tableHtml.append("td").text(value.comments);
   });
 });
+
+//filter to get diffent countries
+var countryDc = {};
+tableData.forEach(value => {
+  countryDc[value.country] = value.country;
+});
+
+console.log(countryDc);
+
+var textCountryMenu = d3.select("#filters");
+textCountryMenu.append("p").text("Country: ");
+
+var menuValueCountry = d3
+  .select("#filters")
+  .append("select")
+  .attr("id", "menu-select");
+
+Object.keys(countryDc).forEach(value => {
+  menuValueCountry
+    .append("option")
+    .text(value)
+    .attr("value", function() {
+      return value;
+    });
+});
+
+d3.select("select").on("change", function(d) {
+  var selected = d3.select("#menu-select").node().value;
+  console.log(selected);
+});
