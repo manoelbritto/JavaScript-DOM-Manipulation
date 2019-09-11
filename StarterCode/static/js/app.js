@@ -35,13 +35,14 @@ tableData.forEach(value => {
 
 console.log(countryDc);
 
+// create a select section for country
 var textCountryMenu = d3.select("#filters");
 textCountryMenu.append("p").text("Country: ");
 
 var menuValueCountry = d3
   .select("#filters")
   .append("select")
-  .attr("id", "menu-select");
+  .attr("id", "menu-select"); //including a id
 
 Object.keys(countryDc).forEach(value => {
   menuValueCountry
@@ -51,8 +52,110 @@ Object.keys(countryDc).forEach(value => {
       return value;
     });
 });
+// end
 
-d3.select("select").on("change", function(d) {
+//based on the data select by previous drop-menu from country, it creates a state menu
+d3.select("select").on("click", function(d) {
+  var stateDc = {};
+  clear();
   var selected = d3.select("#menu-select").node().value;
-  console.log(selected);
+  //find state base on country
+  tableData.filter(value => {
+    if (value.country == selected) {
+      stateDc[value.state] = value.state;
+    }
+  });
+
+  // create the select section for state
+  var textStateMenu = d3.select("#state");
+  textStateMenu.html("");
+  textStateMenu.append("p").text("State: ");
+
+  var menuValueState = d3
+    .select("#state")
+    .append("select")
+    .attr("id", "menu-state"); //including a id
+
+  console.log(stateDc);
+  Object.keys(stateDc).forEach(value => {
+    menuValueState
+      .append("option")
+      .text(value)
+      .attr("value", function() {
+        return value;
+      });
+  });
 });
+// end
+
+//based on the data select by previous drop-menu from state, it creates a city menu
+d3.select("#state").on("click", function(d) {
+  var stateDc = {};
+  d3.select("#shape").html("");
+  var selected = d3.select("#menu-state").node().value;
+  //find state base on country
+  tableData.filter(value => {
+    if (value.state == selected) {
+      stateDc[value.city] = value.city;
+    }
+  });
+
+  // create the select section for city
+  var textCityMenu = d3.select("#city");
+  textCityMenu.html("");
+  textCityMenu.append("p").text("City: ");
+
+  var menuValueCity = d3
+    .select("#city")
+    .append("select")
+    .attr("id", "menu-city"); //including a id
+
+  console.log(stateDc);
+  Object.keys(stateDc).forEach(value => {
+    menuValueCity
+      .append("option")
+      .text(value)
+      .attr("value", function() {
+        return value;
+      });
+  });
+});
+// end
+
+//based on the data select by previous drop-menu from city, it creates a shape menu
+d3.select("#city").on("click", function(d) {
+  var stateDc = {};
+  var selected = d3.select("#menu-city").node().value;
+  //find state base on country
+  tableData.filter(value => {
+    if (value.city == selected) {
+      stateDc[value.shape] = value.shape;
+    }
+  });
+
+  // create the select section for city
+  var textShapeMenu = d3.select("#shape");
+  textShapeMenu.html("");
+  textShapeMenu.append("p").text("Shape: ");
+
+  var menuValueShape = d3
+    .select("#shape")
+    .append("select")
+    .attr("id", "menu-shape"); //including a id
+
+  console.log(stateDc);
+  Object.keys(stateDc).forEach(value => {
+    menuValueShape
+      .append("option")
+      .text(value)
+      .attr("value", function() {
+        return value;
+      });
+  });
+});
+// end
+
+function clear() {
+  d3.select("#city").html("");
+  d3.select("#shape").html("");
+}
