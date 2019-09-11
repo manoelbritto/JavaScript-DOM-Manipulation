@@ -1,5 +1,5 @@
 # Project: JavaScript and DOM Manipulation
-This project uses a JSON data set provides by UFO trackers. But the main of this development is to show how to work D3.js manipulation the Document Object Model (DOM).
+This project uses a JSON data set provides by UFO trackers. But the main of this development is to show how to work with D3.js to manipulate the Document Object Model (DOM).
 
 ## Publish:
  https://manoelbritto.github.io/JavaScript-DOM-Manipulation/
