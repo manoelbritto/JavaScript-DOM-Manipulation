@@ -9,31 +9,50 @@ tableHtml.attr();
 // handle the button event and apply the filter
 filterButton.on("click", function() {
   var filterDate = d3.select("#datetime").property("value");
-  console.log(filterDate);
+  var filterCountry = d3.select("#menu-country").node().value;
+  var filterState = d3.select("#menu-state").node().value;
+  var filterCity = d3.select("#menu-city").node().value;
+  //console.log(filterDate);
   //filter
   var valueFilter = tableData.filter(value => value.datetime == filterDate);
+  if (filterCountry != "") {
+    valueFilter = valueFilter.filter(value => value.country == filterCountry);
+  }
+
+  if (filterState != "") {
+    valueFilter = valueFilter.filter(value => value.state == filterState);
+  }
+
+  if (filterCity != "") {
+    valueFilter = valueFilter.filter(value => value.city == filterCity);
+  }
   //clean the html before including more table line
   tableHtml.html("");
-  //looping into valueFilter and target the corret position
-  valueFilter.forEach(value => {
-    tableHtml.append("tr");
-    tableHtml.append("td").text(value.datetime);
-    tableHtml.append("td").text(value.city);
-    tableHtml.append("td").text(value.state);
-    tableHtml.append("td").text(value.country);
-    tableHtml.append("td").text(value.shape);
-    tableHtml.append("td").text(value.durationMinutes);
-    tableHtml.append("td").text(value.comments);
-  });
+  console.log(valueFilter);
+  if (valueFilter == "") {
+    d3.select("#result").text("Result not found");
+  } else {
+    //looping into valueFilter and target the corret position
+    valueFilter.forEach(value => {
+      tableHtml.append("tr");
+      tableHtml.append("td").text(value.datetime);
+      tableHtml.append("td").text(value.city);
+      tableHtml.append("td").text(value.state);
+      tableHtml.append("td").text(value.country);
+      tableHtml.append("td").text(value.shape);
+      tableHtml.append("td").text(value.durationMinutes);
+      tableHtml.append("td").text(value.comments);
+    });
+  }
 });
 
 //filter to get diffent countries
-var countryDc = {};
+var countryDc = { "": "" };
 tableData.forEach(value => {
   countryDc[value.country] = value.country;
 });
 
-console.log(countryDc);
+// console.log(countryDc);
 
 // create a select section for country
 var textCountryMenu = d3.select("#filters");
@@ -42,7 +61,7 @@ textCountryMenu.append("p").text("Country: ");
 var menuValueCountry = d3
   .select("#filters")
   .append("select")
-  .attr("id", "menu-select"); //including a id
+  .attr("id", "menu-country"); //including a id
 
 Object.keys(countryDc).forEach(value => {
   menuValueCountry
@@ -57,8 +76,8 @@ Object.keys(countryDc).forEach(value => {
 //based on the data select by previous drop-menu from country, it creates a state menu
 d3.select("select").on("click", function(d) {
   var stateDc = {};
-  clear();
-  var selected = d3.select("#menu-select").node().value;
+  clearAll();
+  var selected = d3.select("#menu-country").node().value;
   //find state base on country
   tableData.filter(value => {
     if (value.country == selected) {
@@ -67,24 +86,26 @@ d3.select("select").on("click", function(d) {
   });
 
   // create the select section for state
-  var textStateMenu = d3.select("#state");
-  textStateMenu.html("");
-  textStateMenu.append("p").text("State: ");
+  if (selected != "") {
+    var textStateMenu = d3.select("#state");
+    textStateMenu.html("");
+    textStateMenu.append("p").text("State: ");
 
-  var menuValueState = d3
-    .select("#state")
-    .append("select")
-    .attr("id", "menu-state"); //including a id
+    var menuValueState = d3
+      .select("#state")
+      .append("select")
+      .attr("id", "menu-state"); //including a id
 
-  console.log(stateDc);
-  Object.keys(stateDc).forEach(value => {
-    menuValueState
-      .append("option")
-      .text(value)
-      .attr("value", function() {
-        return value;
-      });
-  });
+    console.log(stateDc);
+    Object.keys(stateDc).forEach(value => {
+      menuValueState
+        .append("option")
+        .text(value)
+        .attr("value", function() {
+          return value;
+        });
+    });
+  }
 });
 // end
 
@@ -156,6 +177,12 @@ d3.select("#city").on("click", function(d) {
 // end
 
 function clear() {
+  d3.select("#city").html("");
+  d3.select("#shape").html("");
+}
+
+function clearAll() {
+  d3.select("#state").html("");
   d3.select("#city").html("");
   d3.select("#shape").html("");
 }
